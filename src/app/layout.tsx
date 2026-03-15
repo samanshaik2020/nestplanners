@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "3D Architecture Company",
-  description: "Immersive 3D Experience",
+  title: "OARCH Architecture Studio",
+  description: "Immersive architecture studio portfolio",
 };
 
 export default function RootLayout({
