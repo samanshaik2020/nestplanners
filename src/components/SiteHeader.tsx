@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import BrandLogo from '@/components/BrandLogo';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
@@ -19,11 +20,12 @@ export default function SiteHeader({ solid = true }: { solid?: boolean }) {
         solid ? 'border-b border-white/5 bg-[#111111]/90 backdrop-blur-md' : ''
       }`}
     >
-      <Link href="/" className="text-2xl font-bold uppercase tracking-[0.25em]">
-        OARCH
+      <Link href="/" className="shrink-0">
+        <BrandLogo className="hidden sm:flex" />
+        <BrandLogo variant="compact" className="sm:hidden" />
       </Link>
 
-      <ul className="hidden items-center gap-10 text-xs font-medium uppercase tracking-[0.2em] md:flex">
+      <ul className="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.2em] lg:flex">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href;
           return (
@@ -41,7 +43,7 @@ export default function SiteHeader({ solid = true }: { solid?: boolean }) {
         })}
       </ul>
 
-      <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] md:hidden">
+      <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] lg:hidden">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}

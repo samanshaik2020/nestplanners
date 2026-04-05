@@ -1,4 +1,5 @@
 import SiteHeader from '@/components/SiteHeader';
+import { CONTACT_DETAILS } from '@/lib/contactDetails';
 
 export default function ContactPage() {
   return (
@@ -11,31 +12,42 @@ export default function ContactPage() {
           <div className="mt-6 grid gap-10 border-t border-white/8 pt-10 lg:grid-cols-[1fr,1fr]">
             <div>
               <h1 className="text-5xl font-bold uppercase leading-[0.9] tracking-tight md:text-7xl">
-                Start The Next Residence With Us
+                NP Design Studio LLP
               </h1>
               <p className="mt-6 max-w-md text-sm leading-relaxed text-white/55">
-                Tell us about your site, program, and level of ambition. We will shape the brief into a calm,
-                highly-resolved architecture process.
+                Official studio details for Next Planners, including our website, registered location, year founded,
+                industry, and design specializations.
               </p>
             </div>
 
             <div className="rounded-[30px] border border-[#D4BFA8]/18 bg-[linear-gradient(180deg,#171717,#121212)] p-8">
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Email</p>
-                  <p className="mt-2 text-lg text-white">studio@oarch.design</p>
+                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Website</p>
+                  <a
+                    href={CONTACT_DETAILS.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-2 block text-lg text-white transition hover:text-[#D4BFA8]"
+                  >
+                    {CONTACT_DETAILS.website}
+                  </a>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Phone</p>
-                  <p className="mt-2 text-lg text-white">+91 98 7654 3210</p>
+                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Founded</p>
+                  <p className="mt-2 text-lg text-white">{CONTACT_DETAILS.founded}</p>
+                </div>
+                <div className="sm:col-span-2">
+                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Location</p>
+                  <p className="mt-2 text-lg text-white">{CONTACT_DETAILS.location}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Studio</p>
-                  <p className="mt-2 text-lg text-white">Mumbai, India</p>
+                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Industry</p>
+                  <p className="mt-2 text-lg text-white">{CONTACT_DETAILS.industry}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Response</p>
-                  <p className="mt-2 text-lg text-white">Within 48 hours</p>
+                  <p className="text-[10px] uppercase tracking-[0.38em] text-[#D4BFA8]">Company</p>
+                  <p className="mt-2 text-lg text-white">{CONTACT_DETAILS.companyName}</p>
                 </div>
               </div>
             </div>
@@ -75,12 +87,9 @@ export default function ContactPage() {
           </form>
 
           <div className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,#161616,#101010)] p-8">
-            <p className="text-[10px] uppercase tracking-[0.42em] text-[#D4BFA8]">What We Need</p>
+            <p className="text-[10px] uppercase tracking-[0.42em] text-[#D4BFA8]">Specialties</p>
             <div className="mt-6 space-y-5 text-sm leading-relaxed text-white/58">
-              <p>Site size, orientation, and topography details.</p>
-              <p>Number of bedrooms, amenities, and special requirements.</p>
-              <p>References for mood, materiality, or lifestyle preferences.</p>
-              <p>Expected construction budget and target completion window.</p>
+              <p>{CONTACT_DETAILS.specialties}</p>
             </div>
           </div>
         </div>
@@ -88,3 +97,4 @@ export default function ContactPage() {
     </main>
   );
 }
+

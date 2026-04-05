@@ -4,30 +4,35 @@ import { motion } from 'framer-motion';
 import SiteHeader from '@/components/SiteHeader';
 
 const LINE = '#D4BFA8';
-const SOFT = 'rgba(212,191,168,0.35)';
+const SOFT = 'rgba(212,191,168,0.38)';
 const GHOST = 'rgba(212,191,168,0.12)';
+const FILL = 'rgba(212,191,168,0.08)';
 
 function DrawPath({
   d,
   delay = 0,
   strokeWidth = 1.6,
   dashed = false,
+  soft = false,
+  fill = 'none',
 }: {
   d: string;
   delay?: number;
   strokeWidth?: number;
   dashed?: boolean;
+  soft?: boolean;
+  fill?: string;
 }) {
   return (
     <motion.path
       d={d}
-      fill="none"
-      stroke={dashed ? SOFT : LINE}
+      fill={fill}
+      stroke={soft ? SOFT : LINE}
       strokeWidth={strokeWidth}
       strokeDasharray={dashed ? '5 5' : undefined}
       initial={{ pathLength: 0, opacity: 0 }}
       whileInView={{ pathLength: 1, opacity: 1 }}
-      viewport={{ once: true, amount: 0.4 }}
+      viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 1.05, delay, ease: 'easeInOut' }}
     />
   );
@@ -40,7 +45,7 @@ function DrawLine({
   y2,
   delay = 0,
   soft = false,
-  width = 1.6,
+  width = 1.4,
   dashed = false,
 }: {
   x1: number;
@@ -63,34 +68,173 @@ function DrawLine({
       strokeDasharray={dashed ? '5 5' : undefined}
       initial={{ pathLength: 0, opacity: 0 }}
       whileInView={{ pathLength: 1, opacity: 1 }}
-      viewport={{ once: true, amount: 0.4 }}
+      viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.9, delay, ease: 'easeInOut' }}
+    />
+  );
+}
+
+function DrawRect({
+  x,
+  y,
+  w,
+  h,
+  rx = 0,
+  delay = 0,
+  strokeWidth = 1.4,
+  dashed = false,
+  soft = false,
+  fill = 'none',
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  rx?: number;
+  delay?: number;
+  strokeWidth?: number;
+  dashed?: boolean;
+  soft?: boolean;
+  fill?: string;
+}) {
+  return (
+    <motion.rect
+      x={x}
+      y={y}
+      width={w}
+      height={h}
+      rx={rx}
+      fill={fill}
+      stroke={soft ? SOFT : LINE}
+      strokeWidth={strokeWidth}
+      strokeDasharray={dashed ? '5 5' : undefined}
+      initial={{ pathLength: 0, opacity: 0 }}
+      whileInView={{ pathLength: 1, opacity: 1 }}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={{ duration: 0.9, delay, ease: 'easeInOut' }}
+    />
+  );
+}
+
+function FadeText({
+  x,
+  y,
+  children,
+  delay = 0,
+  anchor = 'start',
+  size = 8.5,
+  letterSpacing = 3,
+  tone = 'line',
+}: {
+  x: number;
+  y: number;
+  children: React.ReactNode;
+  delay?: number;
+  anchor?: 'start' | 'middle' | 'end';
+  size?: number;
+  letterSpacing?: number;
+  tone?: 'line' | 'soft';
+}) {
+  return (
+    <motion.text
+      x={x}
+      y={y}
+      textAnchor={anchor}
+      fill={tone === 'soft' ? SOFT : LINE}
+      fontSize={size}
+      letterSpacing={letterSpacing}
+      initial={{ opacity: 0, y: 4 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={{ duration: 0.45, delay, ease: 'easeOut' }}
+    >
+      {children}
+    </motion.text>
+  );
+}
+
+function PulseNode({
+  cx,
+  cy,
+  delay = 0,
+}: {
+  cx: number;
+  cy: number;
+  delay?: number;
+}) {
+  return (
+    <motion.circle
+      cx={cx}
+      cy={cy}
+      r="3.2"
+      fill={LINE}
+      animate={{ opacity: [0.35, 1, 0.35], scale: [1, 1.45, 1] }}
+      transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay }}
     />
   );
 }
 
 function DiagramFrame({
   title,
+  subtitle,
+  idSuffix,
   children,
 }: {
   title: string;
+  subtitle: string;
+  idSuffix: string;
   children: React.ReactNode;
 }) {
+  const gridId = `project-grid-${idSuffix}`;
+  const panelId = `project-panel-${idSuffix}`;
+  const glowId = `project-glow-${idSuffix}`;
+
   return (
-    <div className="rounded-[24px] border border-[#D4BFA8]/14 bg-[linear-gradient(180deg,#141414,#101010)] p-4">
+    <div className="rounded-[32px] border border-[#D4BFA8]/18 bg-[radial-gradient(circle_at_top,rgba(212,191,168,0.14),transparent_48%),linear-gradient(180deg,#1a1a1a,#101010)] p-5 shadow-[0_28px_100px_rgba(0,0,0,0.34)]">
       <motion.svg
-        viewBox="0 0 320 220"
-        className="mx-auto w-full max-w-[320px]"
-        initial={{ opacity: 0, y: 10 }}
+        viewBox="0 0 360 248"
+        className="mx-auto w-full max-w-none"
+        initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.35 }}
+        viewport={{ once: true, amount: 0.22 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
       >
-        <rect x="16" y="20" width="288" height="170" rx="22" fill="rgba(255,255,255,0.015)" stroke={GHOST} />
+        <defs>
+          <pattern id={gridId} width="22" height="22" patternUnits="userSpaceOnUse">
+            <path d="M22 0H0V22" fill="none" stroke="rgba(212,191,168,0.06)" strokeWidth="1" />
+          </pattern>
+          <linearGradient id={panelId} x1="0" y1="16" x2="0" y2="214" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#1A1A1A" />
+            <stop offset="100%" stopColor="#101010" />
+          </linearGradient>
+          <radialGradient id={glowId} cx="50%" cy="8%" r="88%">
+            <stop offset="0%" stopColor="#D4BFA8" stopOpacity="0.16" />
+            <stop offset="55%" stopColor="#D4BFA8" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#D4BFA8" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        <rect x="14" y="18" width="332" height="196" rx="28" fill={`url(#${panelId})`} stroke="rgba(212,191,168,0.14)" />
+        <rect x="28" y="32" width="304" height="166" rx="20" fill={`url(#${glowId})`} />
+        <rect x="28" y="32" width="304" height="166" rx="20" fill={`url(#${gridId})`} stroke={GHOST} />
+
+        <DrawLine x1={44} y1={26} x2={102} y2={26} width={1.1} soft delay={0.08} />
+        <DrawLine x1={258} y1={26} x2={316} y2={26} width={1.1} soft delay={0.14} />
+        <DrawLine x1={44} y1={224} x2={116} y2={224} width={1.1} soft delay={0.2} />
+        <DrawLine x1={244} y1={224} x2={316} y2={224} width={1.1} soft delay={0.26} />
+
+        <FadeText x={46} y={24} size={8} letterSpacing={2.8} delay={0.32}>
+          {subtitle}
+        </FadeText>
+        <FadeText x={314} y={24} anchor="end" size={8} letterSpacing={2.8} delay={0.38} tone="soft">
+          NPDS DETAIL
+        </FadeText>
+
         {children}
-        <text x="160" y="206" textAnchor="middle" fill={LINE} fontSize="10" letterSpacing="4">
+
+        <FadeText x={180} y={231} anchor="middle" size={10} letterSpacing={4.2} delay={0.9}>
           {title}
-        </text>
+        </FadeText>
       </motion.svg>
     </div>
   );
@@ -98,110 +242,182 @@ function DiagramFrame({
 
 function AlpineCourtyardDiagram() {
   return (
-    <DiagramFrame title="COURTYARD PLAN">
-      <DrawPath d="M58 54 H262 V152 H58 Z" strokeWidth={2.2} />
-      <DrawPath d="M128 84 H192 V122 H128 Z" delay={0.2} dashed />
-      <DrawLine x1={58} y1={102} x2={128} y2={102} delay={0.35} />
-      <DrawLine x1={192} y1={102} x2={262} y2={102} delay={0.42} />
-      <DrawLine x1={160} y1={54} x2={160} y2={84} delay={0.48} />
-      <DrawLine x1={160} y1={122} x2={160} y2={152} delay={0.55} />
-      <DrawLine x1={42} y1={172} x2={94} y2={172} delay={0.62} width={1.1} />
-      <DrawLine x1={226} y1={172} x2={278} y2={172} delay={0.68} width={1.1} />
-      <DrawLine x1={58} y1={40} x2={262} y2={40} delay={0.76} soft width={1.1} />
-      <DrawLine x1={58} y1={40} x2={58} y2={54} delay={0.82} soft width={1.1} />
-      <DrawLine x1={262} y1={40} x2={262} y2={54} delay={0.88} soft width={1.1} />
-      <motion.text
-        x="160"
-        y="34"
-        textAnchor="middle"
-        fill={LINE}
-        fontSize="9"
-        letterSpacing="3"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.95, duration: 0.35 }}
-      >
-        18.5M
-      </motion.text>
-      <motion.circle
-        cx="160"
-        cy="103"
-        r="4"
-        fill={LINE}
-        animate={{ opacity: [0.35, 1, 0.35], scale: [1, 1.4, 1] }}
-        transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+    <DiagramFrame title="ALPINE COURTYARD HOUSE" subtitle="MEASURED PLAN" idSuffix="alpine">
+      <DrawPath
+        d="M78 78 H136 V62 H226 V78 H286 V146 H250 V174 H108 V156 H78 Z"
+        delay={0.08}
+        strokeWidth={2.3}
       />
+      <DrawRect x={146} y={90} w={68} h={50} rx={10} delay={0.18} dashed fill={FILL} />
+      <DrawRect x={92} y={92} w={38} h={48} rx={8} delay={0.26} soft strokeWidth={1.1} />
+      <DrawRect x={230} y={94} w={34} h={44} rx={8} delay={0.34} soft strokeWidth={1.1} />
+      <DrawRect x={110} y={148} w={54} h={18} rx={6} delay={0.42} soft strokeWidth={1.1} />
+      <DrawRect x={194} y={148} w={56} h={18} rx={6} delay={0.5} soft strokeWidth={1.1} />
+      <DrawLine x1={78} y1={116} x2={146} y2={116} delay={0.58} />
+      <DrawLine x1={214} y1={116} x2={286} y2={116} delay={0.66} />
+      <DrawLine x1={180} y1={62} x2={180} y2={90} delay={0.74} />
+      <DrawLine x1={180} y1={140} x2={180} y2={174} delay={0.82} />
+      <DrawLine x1={64} y1={60} x2={300} y2={60} delay={0.9} width={1.1} soft />
+      <DrawLine x1={78} y1={50} x2={78} y2={78} delay={0.96} width={1.1} soft />
+      <DrawLine x1={286} y1={50} x2={286} y2={78} delay={1.02} width={1.1} soft />
+      <DrawLine x1={64} y1={182} x2={300} y2={182} delay={1.08} width={1.1} soft />
+      <DrawLine x1={108} y1={174} x2={108} y2={190} delay={1.14} width={1.1} soft />
+      <DrawLine x1={250} y1={174} x2={250} y2={190} delay={1.2} width={1.1} soft />
+      <DrawLine x1={58} y1={90} x2={58} y2={144} delay={1.26} width={1.1} soft />
+      <DrawLine x1={58} y1={90} x2={78} y2={90} delay={1.32} width={1.1} soft />
+      <DrawLine x1={58} y1={144} x2={78} y2={144} delay={1.38} width={1.1} soft />
+      <FadeText x={180} y={120} anchor="middle" size={8} letterSpacing={2.8} delay={1.44}>
+        LIGHT COURT
+      </FadeText>
+      <FadeText x={92} y={86} size={7.4} letterSpacing={2.2} delay={1.5} tone="soft">
+        ENTRY
+      </FadeText>
+      <FadeText x={268} y={88} anchor="end" size={7.4} letterSpacing={2.2} delay={1.56} tone="soft">
+        LIVING EDGE
+      </FadeText>
+      <FadeText x={182} y={53} anchor="middle" size={7.4} letterSpacing={2.4} delay={1.62}>
+        24.0M FRONTAGE
+      </FadeText>
+      <FadeText x={50} y={118} anchor="middle" size={7.2} letterSpacing={2.2} delay={1.68}>
+        11.2M
+      </FadeText>
+      <PulseNode cx={180} cy={116} delay={0.1} />
+      <PulseNode cx={136} cy={78} delay={0.45} />
+      <PulseNode cx={226} cy={78} delay={0.75} />
     </DiagramFrame>
   );
 }
 
 function DesertShadowDiagram() {
   return (
-    <DiagramFrame title="DESERT SECTION">
-      <DrawLine x1={48} y1={156} x2={272} y2={156} width={2} />
-      <DrawPath d="M66 156 L112 70 L156 114 L220 52 L270 156" delay={0.16} strokeWidth={2.2} />
-      <DrawPath d="M92 112 H246 V156 H92 Z" delay={0.3} dashed strokeWidth={1.2} />
-      <DrawLine x1={120} y1={112} x2={120} y2={156} delay={0.4} soft width={1} />
-      <DrawLine x1={212} y1={112} x2={212} y2={156} delay={0.48} soft width={1} />
-      <DrawLine x1={76} y1={80} x2={96} y2={80} delay={0.58} width={1.1} />
-      <DrawLine x1={86} y1={68} x2={86} y2={92} delay={0.64} width={1.1} />
-      <motion.circle
-        cx="250"
-        cy="62"
-        r="22"
+    <DiagramFrame title="DESERT SHADOW VILLA" subtitle="CLIMATE SECTION" idSuffix="desert">
+      <DrawLine x1={48} y1={170} x2={308} y2={170} delay={0.08} width={2} />
+      <motion.path
+        d="M70 170 L94 126 H136 L156 100 H214 L236 118 H280 V170 Z"
+        fill={FILL}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.35 }}
+        transition={{ duration: 0.55, delay: 0.14, ease: 'easeOut' }}
+      />
+      <DrawPath d="M70 170 L94 126 H136 L156 100 H214 L236 118 H280 V170" delay={0.2} strokeWidth={2.3} />
+      <DrawRect x={130} y={132} w={70} h={22} rx={7} delay={0.3} dashed fill="rgba(212,191,168,0.05)" />
+      <DrawRect x={210} y={132} w={44} h={14} rx={5} delay={0.38} soft strokeWidth={1.1} />
+      <DrawLine x1={96} y1={126} x2={96} y2={170} delay={0.46} soft dashed width={1.1} />
+      <DrawLine x1={246} y1={118} x2={246} y2={170} delay={0.54} soft dashed width={1.1} />
+      <DrawLine x1={174} y1={154} x2={174} y2={110} delay={0.62} width={1.2} />
+      <DrawLine x1={170} y1={116} x2={174} y2={110} delay={0.7} width={1.2} />
+      <DrawLine x1={178} y1={116} x2={174} y2={110} delay={0.76} width={1.2} />
+      <DrawPath d="M46 186 Q96 176 144 184 T240 184 T316 186" delay={0.84} soft strokeWidth={1.1} />
+      <motion.path
+        d="M236 70 Q260 46 294 48"
         fill="none"
         stroke={SOFT}
-        strokeWidth="1.2"
-        initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: 0.72 }}
+        strokeWidth="1.1"
+        strokeDasharray="4 5"
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 0.9 }}
+        viewport={{ once: true, amount: 0.35 }}
+        transition={{ duration: 0.95, delay: 0.92, ease: 'easeInOut' }}
       />
-      {[0, 1, 2].map((i) => (
+      <motion.circle
+        cx="290"
+        cy="46"
+        r="16"
+        fill="none"
+        stroke={SOFT}
+        strokeWidth="1.1"
+        initial={{ scale: 0.85, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true, amount: 0.35 }}
+        transition={{ duration: 0.55, delay: 1.02, ease: 'easeOut' }}
+      />
+      {[0, 1, 2].map((index) => (
         <motion.line
-          key={i}
-          x1={228 - i * 4}
-          y1={40 + i * 9}
-          x2={206 - i * 4}
-          y2={48 + i * 9}
+          key={index}
+          x1={280 - index * 5}
+          y1={30 + index * 7}
+          x2={258 - index * 5}
+          y2={36 + index * 7}
           stroke={SOFT}
           strokeWidth="1"
-          animate={{ x1: [228 - i * 4, 222 - i * 4, 228 - i * 4], x2: [206 - i * 4, 200 - i * 4, 206 - i * 4] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.2 }}
+          animate={{
+            x1: [280 - index * 5, 274 - index * 5, 280 - index * 5],
+            x2: [258 - index * 5, 252 - index * 5, 258 - index * 5],
+          }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: index * 0.2 }}
         />
       ))}
+      <FadeText x={164} y={95} anchor="middle" size={7.8} letterSpacing={2.4} delay={1.1}>
+        DEEP SHADE
+      </FadeText>
+      <FadeText x={174} y={104} anchor="middle" size={7.1} letterSpacing={2.2} delay={1.18} tone="soft">
+        STACK COOLING
+      </FadeText>
+      <FadeText x={240} y={127} anchor="middle" size={7.2} letterSpacing={2.2} delay={1.24} tone="soft">
+        WATER COURT
+      </FadeText>
+      <FadeText x={282} y={76} anchor="end" size={7.2} letterSpacing={2.2} delay={1.3}>
+        LOW SUN
+      </FadeText>
+      <PulseNode cx={174} cy={126} delay={0.25} />
     </DiagramFrame>
   );
 }
 
 function ClifflineHorizonDiagram() {
   return (
-    <DiagramFrame title="CLIFF ELEVATION">
-      <DrawLine x1={34} y1={164} x2={286} y2={164} width={2} />
-      <DrawPath d="M64 146 H146 L192 82 H254" delay={0.18} strokeWidth={2.3} />
-      <DrawLine x1={96} y1={128} x2={146} y2={128} delay={0.32} soft width={1.1} />
-      <DrawLine x1={192} y1={108} x2={250} y2={108} delay={0.4} soft width={1.1} />
-      <DrawLine x1={220} y1={82} x2={220} y2={164} delay={0.5} soft width={1.2} dashed />
-      <DrawLine x1={242} y1={82} x2={242} y2={164} delay={0.58} soft width={1.2} dashed />
+    <DiagramFrame title="CLIFFLINE HORIZON HOUSE" subtitle="CANTILEVER ELEVATION" idSuffix="cliffline">
+      <DrawLine x1={40} y1={166} x2={314} y2={166} delay={0.08} width={2} />
       <motion.path
-        d="M22 186 Q160 132 298 186"
-        fill="none"
-        stroke={SOFT}
-        strokeWidth="1.2"
-        initial={{ pathLength: 0, opacity: 0 }}
-        whileInView={{ pathLength: 1, opacity: 0.7 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, delay: 0.66, ease: 'easeInOut' }}
+        d="M72 166 H150 V132 H194 V94 H266 V118 H292 V166 Z"
+        fill={FILL}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.35 }}
+        transition={{ duration: 0.55, delay: 0.16, ease: 'easeOut' }}
       />
-      <motion.circle
-        cx="182"
-        cy="82"
-        r="3.4"
-        fill={LINE}
-        animate={{ opacity: [0.35, 1, 0.35] }}
-        transition={{ duration: 2.1, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      <DrawPath d="M72 166 H150 V132 H194 V94 H266 V118 H292 V166" delay={0.24} strokeWidth={2.35} />
+      <DrawRect x={96} y={140} w={36} h={14} rx={4} delay={0.34} soft strokeWidth={1.1} />
+      <DrawRect x={206} y={108} w={38} h={12} rx={4} delay={0.42} soft strokeWidth={1.1} />
+      <DrawLine x1={194} y1={94} x2={194} y2={166} delay={0.5} soft dashed width={1.1} />
+      <DrawLine x1={244} y1={108} x2={244} y2={166} delay={0.58} soft dashed width={1.1} />
+      <DrawLine x1={292} y1={118} x2={316} y2={118} delay={0.66} width={1.4} />
+      <DrawLine x1={316} y1={112} x2={316} y2={124} delay={0.74} width={1.1} />
+      <DrawPath d="M24 188 Q112 152 188 170 T336 182" delay={0.82} soft strokeWidth={1.15} />
+      {[0, 1, 2].map((index) => (
+        <motion.line
+          key={index}
+          x1={286}
+          y1={122}
+          x2={326}
+          y2={94 + index * 18}
+          stroke={SOFT}
+          strokeWidth="1"
+          strokeDasharray="4 5"
+          initial={{ pathLength: 0, opacity: 0 }}
+          whileInView={{ pathLength: 1, opacity: 0.9 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.7, delay: 0.92 + index * 0.08, ease: 'easeInOut' }}
+        />
+      ))}
+      <DrawLine x1={66} y1={82} x2={150} y2={82} delay={1.08} soft width={1.1} />
+      <DrawLine x1={72} y1={82} x2={72} y2={166} delay={1.16} soft width={1.1} />
+      <DrawLine x1={150} y1={82} x2={150} y2={132} delay={1.22} soft width={1.1} />
+      <FadeText x={228} y={86} anchor="middle" size={7.7} letterSpacing={2.4} delay={1.3}>
+        SKY SUITE
+      </FadeText>
+      <FadeText x={317} y={106} anchor="end" size={7.2} letterSpacing={2.2} delay={1.38}>
+        VIEW LINES
+      </FadeText>
+      <FadeText x={110} y={74} anchor="middle" size={7.1} letterSpacing={2.2} delay={1.44} tone="soft">
+        16.8M PODIUM
+      </FadeText>
+      <FadeText x={304} y={132} anchor="end" size={7.1} letterSpacing={2.2} delay={1.5} tone="soft">
+        CANTILEVER EDGE
+      </FadeText>
+      <PulseNode cx={194} cy={94} delay={0.2} />
+      <PulseNode cx={292} cy={118} delay={0.55} />
     </DiagramFrame>
   );
 }
@@ -256,40 +472,57 @@ export default function ProjectsPage() {
       </section>
 
       <section className="px-6 pb-24 md:px-8">
-        <div className="mx-auto grid max-w-7xl gap-5">
+        <div className="mx-auto grid max-w-[1580px] gap-6 lg:grid-cols-3">
           {PROJECTS.map((project, index) => (
             <motion.article
               key={project.name}
-              className="grid gap-7 rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,#171717,#121212)] p-6 lg:grid-cols-[1fr,360px] lg:items-start"
+              className="flex h-full flex-col rounded-[34px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(212,191,168,0.08),transparent_38%),linear-gradient(180deg,#181818,#111111)] p-6 shadow-[0_28px_90px_rgba(0,0,0,0.22)] lg:min-h-[760px] lg:p-7 xl:min-h-[820px] xl:p-8"
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.18 }}
               transition={{ duration: 0.65, delay: index * 0.08, ease: 'easeOut' }}
             >
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.45em] text-[#D4BFA8]">{project.type}</p>
-                <h2 className="mt-4 text-3xl font-bold uppercase tracking-tight md:text-[2rem]">{project.name}</h2>
-                <p className="mt-5 max-w-2xl text-sm leading-relaxed text-white/58">{project.summary}</p>
-
-                <div className="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-[22px] border border-white/8 bg-white/8 sm:max-w-[520px]">
-                  {[
-                    ['Year', project.year],
-                    ['Area', project.area],
-                    ['Status', 'In Progress'],
-                    ['Drawing', project.drawing],
-                  ].map(([label, value]) => (
-                    <div key={label} className="bg-[#111111] p-5">
-                      <p className="text-[10px] uppercase tracking-[0.35em] text-[#D4BFA8]">{label}</p>
-                      <p className="mt-3 text-sm font-semibold uppercase tracking-[0.08em] text-white md:text-base">
-                        {value}
-                      </p>
-                    </div>
-                  ))}
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.45em] text-[#D4BFA8]">{project.type}</p>
+                  <h2 className="mt-4 text-3xl font-bold uppercase tracking-tight md:text-[2.15rem]">
+                    {project.name}
+                  </h2>
+                </div>
+                <div className="rounded-full border border-[#D4BFA8]/22 px-4 py-2 text-[10px] uppercase tracking-[0.35em] text-[#D4BFA8]">
+                  {String(index + 1).padStart(2, '0')}
                 </div>
               </div>
 
-              <div className="lg:pt-1">
+              <div className="mt-8">
                 <project.Diagram />
+              </div>
+
+              <p className="mt-8 text-base leading-relaxed text-white/62 xl:text-[1.02rem]">
+                {project.summary}
+              </p>
+
+              <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-[24px] border border-white/8 bg-white/8">
+                {[
+                  ['Year', project.year],
+                  ['Area', project.area],
+                  ['Status', 'In Progress'],
+                  ['Drawing', project.drawing],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-[#111111] p-5 xl:p-6">
+                    <p className="text-[10px] uppercase tracking-[0.35em] text-[#D4BFA8]">{label}</p>
+                    <p className="mt-3 text-sm font-semibold uppercase tracking-[0.08em] text-white md:text-base">
+                      {value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-auto pt-8">
+                <div className="flex items-center justify-between border-t border-white/8 pt-5 text-[10px] uppercase tracking-[0.38em] text-white/40">
+                  <span>Next Planners</span>
+                  <span>{project.type}</span>
+                </div>
               </div>
             </motion.article>
           ))}

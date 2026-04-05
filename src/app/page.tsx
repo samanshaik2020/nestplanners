@@ -5,9 +5,12 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { motion } from 'framer-motion';
+import BrandLogo from '@/components/BrandLogo';
 import HeroSVG from '@/components/HeroSVG';
 import MeasuredBlueprint from '@/components/MeasuredBlueprint';
 import SiteHeader from '@/components/SiteHeader';
+import { CONTACT_DETAILS } from '@/lib/contactDetails';
+import { HOME_GALLERY_IMAGES } from '@/lib/galleryImages';
 import {
   ElevationSVG,
   FloorPlanSVG,
@@ -15,15 +18,6 @@ import {
   PanoramicSVG,
   ZeroCarbonSVG,
 } from '@/components/SectionSVGs';
-
-const GALLERY = [
-  { id: 1029, w: 800, h: 600 },
-  { id: 1035, w: 800, h: 500 },
-  { id: 1039, w: 800, h: 700 },
-  { id: 1048, w: 800, h: 550 },
-  { id: 1051, w: 800, h: 650 },
-  { id: 1062, w: 800, h: 600 },
-];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
@@ -86,10 +80,11 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: 'easeOut' as const, delay: 0.3 }}
         >
-          <p className="mb-6 text-xs uppercase tracking-[0.6em] text-[#D4BFA8]">Architecture Studio</p>
-          <h1 className="text-[clamp(4rem,13vw,10rem)] font-bold uppercase leading-none tracking-tighter">OARCH</h1>
+          <BrandLogo variant="mark" className="mb-8 h-16 w-16 text-[#D4BFA8]" />
+          <p className="mb-6 text-xs uppercase tracking-[0.6em] text-[#D4BFA8]">Next Planners</p>
+          <h1 className="text-[clamp(4rem,13vw,10rem)] font-bold uppercase leading-none tracking-tighter">NP</h1>
           <h2 className="mt-4 text-lg font-light uppercase tracking-[0.3em] text-[#D4BFA8] md:text-2xl">
-            Immersive Architecture
+            Design Studios
           </h2>
           <p className="mt-6 text-sm font-light uppercase tracking-[0.2em] text-white/40">
             Scroll to explore the building
@@ -213,22 +208,24 @@ export default function Home() {
               </motion.h2>
             </FadeSection>
             <div className="columns-1 gap-4 space-y-4 sm:columns-2 lg:columns-3">
-              {GALLERY.map((img, idx) => (
+              {HOME_GALLERY_IMAGES.map((image, idx) => (
                 <motion.div
-                  key={img.id}
+                  key={image.id}
                   className="group cursor-pointer overflow-hidden break-inside-avoid"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.1 }}
                   transition={{ duration: 0.7, delay: idx * 0.08, ease: 'easeOut' as const }}
                 >
-                  <Image
-                    src={`https://picsum.photos/id/${img.id}/${img.w}/${img.h}`}
-                    alt={`Architecture ${idx + 1}`}
-                    width={img.w}
-                    height={img.h}
-                    className="w-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
-                  />
+                  <div className="relative w-full overflow-hidden" style={{ aspectRatio: image.aspectRatio }}>
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
+                    />
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -282,6 +279,20 @@ export default function Home() {
             </motion.form>
 
             <div className="mt-8 text-center">
+              <p className="mb-3 text-[10px] uppercase tracking-[0.35em] text-white/35">
+                {CONTACT_DETAILS.location}
+              </p>
+              <a
+                href={CONTACT_DETAILS.website}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] uppercase tracking-[0.4em] text-[#D4BFA8] transition hover:text-white"
+              >
+                {CONTACT_DETAILS.website}
+              </a>
+            </div>
+
+            <div className="mt-5 text-center">
               <Link
                 href="/contact"
                 className="text-[10px] uppercase tracking-[0.4em] text-[#D4BFA8] transition hover:text-white"
@@ -291,10 +302,13 @@ export default function Home() {
             </div>
           </div>
           <p className="mt-32 text-center text-[10px] font-light uppercase tracking-[0.4em] text-white/20">
-            (c) 2026 OARCH. Designed for the Future.
+            (c) 2026 NP Design Studios. Designed for the Future.
           </p>
         </footer>
       </div>
     </main>
   );
 }
+
+
+

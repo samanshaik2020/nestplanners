@@ -103,13 +103,25 @@ export default function HeroSVG() {
                 {/* Ground line */}
                 <AL x1={60} y1={522} x2={740} y2={522} sw="0.8" delay={2.4} dur={0.8} />
 
-                {/* Compass rose */}
+                {/* NP monogram badge */}
                 <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6, duration: 0.8 }}>
-                    <circle cx="730" cy="100" r="18" fill="none" stroke={S} strokeWidth="0.8" />
-                    <line x1="730" y1="82" x2="730" y2="118" stroke={S} strokeWidth="0.8" />
-                    <line x1="712" y1="100" x2="748" y2="100" stroke={S} strokeWidth="0.8" />
-                    <polygon points="730,82 726,96 730,92 734,96" fill={S} />
-                    <text x="730" y="75" textAnchor="middle" fill={S} fontSize="9" fontFamily="Inter, sans-serif" letterSpacing="2">N</text>
+                    <rect x="700" y="70" width="60" height="60" rx="18" fill="rgba(17,17,17,0.28)" stroke={S} strokeWidth="0.8" />
+                    <path
+                        d="M714 114V86L728 104V86"
+                        stroke={S}
+                        strokeWidth="3.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                    <path
+                        d="M728 114V86H738C744 86 748 89.8 748 95.8C748 101.8 744 105 738 105H728"
+                        stroke={S}
+                        strokeWidth="3.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                    <circle cx="714" cy="86" r="2.1" fill={S} />
+                    <circle cx="748" cy="105" r="2.1" fill={S} opacity="0.65" />
                 </motion.g>
 
                 {/* Scale bar */}

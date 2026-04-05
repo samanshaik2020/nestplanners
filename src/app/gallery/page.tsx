@@ -1,16 +1,6 @@
 import Image from 'next/image';
 import SiteHeader from '@/components/SiteHeader';
-
-const GALLERY = [
-  { id: 1018, width: 1200, height: 820, title: 'Atrium Light Court', tag: 'Residence 01' },
-  { id: 1025, width: 1200, height: 1500, title: 'Terraced Facade', tag: 'Residence 02' },
-  { id: 1036, width: 1200, height: 900, title: 'Material Palette', tag: 'Studio Detail' },
-  { id: 1040, width: 1200, height: 1350, title: 'Pool Edge Horizon', tag: 'Wellness Wing' },
-  { id: 1043, width: 1200, height: 860, title: 'Dining Pavilion', tag: 'Interior View' },
-  { id: 1050, width: 1200, height: 1500, title: 'Concrete Stair Hall', tag: 'Circulation' },
-  { id: 1067, width: 1200, height: 880, title: 'Evening Exterior', tag: 'Mountain House' },
-  { id: 1074, width: 1200, height: 1420, title: 'Bedroom Frame', tag: 'Private Suite' },
-];
+import { GALLERY_IMAGES } from '@/lib/galleryImages';
 
 export default function GalleryPage() {
   return (
@@ -35,18 +25,20 @@ export default function GalleryPage() {
 
       <section className="px-6 pb-24 md:px-8">
         <div className="mx-auto columns-1 max-w-7xl gap-5 space-y-5 sm:columns-2 xl:columns-3">
-          {GALLERY.map((image) => (
+          {GALLERY_IMAGES.map((image) => (
             <article
               key={image.id}
               className="group relative overflow-hidden rounded-[26px] border border-white/10 bg-[#171717] break-inside-avoid"
             >
-              <Image
-                src={`https://picsum.photos/id/${image.id}/${image.width}/${image.height}`}
-                alt={image.title}
-                width={image.width}
-                height={image.height}
-                className="h-auto w-full object-cover grayscale transition duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
-              />
+              <div className="relative w-full" style={{ aspectRatio: image.aspectRatio }}>
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover grayscale transition duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
+                />
+              </div>
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/60 to-transparent p-6">
                 <p className="text-[10px] uppercase tracking-[0.42em] text-[#D4BFA8]">{image.tag}</p>
                 <h2 className="mt-2 text-xl font-semibold uppercase tracking-[0.08em]">{image.title}</h2>

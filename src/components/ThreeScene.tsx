@@ -17,7 +17,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     studio.initialize();
 }
 
-const project = getProject('OARCH Flythrough');
+const project = getProject('NP Design Studios Flythrough');
 const mainSheet = project.sheet('Main Sheet');
 
 function SceneAnimation() {
